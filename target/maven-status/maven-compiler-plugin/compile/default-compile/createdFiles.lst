@@ -1,0 +1,7 @@
+SpiceJetAutomation\SpiceJet\FetchDbData.class
+utility\TestUtility.class
+SpiceJetAutomation\SpiceJet\WebDriverManager.class
+SpiceJetAutomation\SpiceJet\Hooks.class
+Runner\TestRunner.class
+SpiceJetAutomation\SpiceJet\SignUpActions.class
+SpiceJetAutomation\SpiceJet\Loginparameters.class
