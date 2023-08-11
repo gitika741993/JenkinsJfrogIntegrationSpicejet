@@ -15,7 +15,15 @@ pipeline {
               }
                 }
             }
-         
+    env.ARTIFACTORY = 'True'
+    if(env.ARTIFACTORY == 'True')
+    {
+        stage('Deploying to Artifactory')
+        {
+            FAILED_STAGE = env.STAGE_NAME
+            bat 'mvn deploy'
+        }
+    }
         
     }
 }
