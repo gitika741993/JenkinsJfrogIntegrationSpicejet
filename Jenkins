@@ -1,29 +1,62 @@
 pipeline {
     agent any
+	tools {
+	    maven "M3"
+	 	}
+	stages {
+	    stage('Git CheckOut') {
+		    steps {
+			   git url: 'https://github.com/Priya141092/JenkinsInt.git'
+			}
+		}
 
-    stages {
-        stage('GitPipeline') {
+
+        stage('Clean and Install') {
             steps {
-                git credentialsId: 'Git', url: 'https://github.com/gitika741993/JenkinsJfrogIntegrationSpicejet.git'
-'
+                bat 'mvn clean install'
             }
         }
-       stage('build && SonarQube analysis') {
+       	stage("Sonar Qube Build Analysis") {
+            agent any
             steps {
-             withSonarQubeEnv('SonarQube') {
+              withSonarQubeEnv('SonarQube') {
                 bat 'mvn clean package sonar:sonar'
               }
-                }
             }
-    env.ARTIFACTORY = 'True'
-    if(env.ARTIFACTORY == 'True')
-    {
-        stage('Deploying to Artifactory')
-        {
-            FAILED_STAGE = env.STAGE_NAME
-            bat 'mvn deploy'
+          }
+	stage ('Server'){
+            steps {
+               rtServer (
+                 id: "Artifactory",
+                 url: 'http://localhost:8082/artifactory',
+                 username: 'admin',
+                  password: 'Testing@0707',
+                  bypassProxy: true,
+                   timeout: 300
+                        )
+            }
         }
-    }
-        
+        stage('Upload'){
+            steps{
+                rtUpload (
+                 serverId:"Artifactory" ,
+                  spec: '''{
+                   "files": [
+                      {
+                      "pattern": "*.war",
+                      "target": "NewRepo"
+                      }
+                            ]
+                           }''',
+                        )
+            }
+        }
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "Artifactory"
+                )
+            }
+        }
     }
 }
