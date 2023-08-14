@@ -6,7 +6,7 @@ pipeline {
 	stages {
 	    stage('Git CheckOut') {
 		    steps {
-			   git url: 'https://github.com/Priya141092/JenkinsInt.git'
+			   git url: 'https://github.com/gitika741993/JenkinsJfrogIntegrationSpicejet.git'
 			}
 		}
 
@@ -44,7 +44,7 @@ pipeline {
                    "files": [
                       {
                       "pattern": "*.war",
-                      "target": "NewRepo"
+                      "target": "SonarjenkinsSpicejet"
                       }
                             ]
                            }''',
